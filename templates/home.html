@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ch" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="copyright" content="This site is developed by TJU NLP lab. Copyright 2021, All rights reserved.">
+    <title>NLU数据标注平台</title>
+    <link href="Home.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="{{ url_for('static',    filename='css/home.css') }}">
+    <!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
+    <script src="{{url_for('static', filename='js/functions.js')}}"></script>
+  </head>
+
+  <body>
+
+    <section class="main" id="main">
+      <div class="content-wrapper">
+
+        <div class="top-part">
+          <div class="passage-wrapper">
+            <div class="context-wrapper">
+              <h2>语境:</h2>
+              <p id="context">正在加载</p>
+            </div>
+            <div class="target-sentence-wrapper">
+              <h2>目标句:</h2>
+              <p id="target-sentence">正在加载</p>
+            </div>
+          </div>
+
+          <div class="form-wrapper">
+            <h2>你的猜测:</h2>
+            <form name="form" id='form'>
+              <fieldset>
+                <input type="text" name="answer" id="answer" required="required" placeholder="请键入">
+              </fieldset>
+            </form>
+          </div>
+        </div>
+
+        <div class="buttons">
+          <input type="button" id="submit" value="提交" onClick="submit()">
+          <input type="button" id="next" value="猜不到" onClick="fetchContent()">
+        </div>
+
+      </div>
+
+    </section>
+
+  </body>
+</html>

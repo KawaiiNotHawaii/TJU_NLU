@@ -1,0 +1,88 @@
+body, div, section, header {
+  line-height: 1;
+  display: block;
+  font-family: "宋体", Helvetica, sans-serif;
+  box-sizing: border-box;
+}
+
+h2{
+  font-size: 2.3em;
+}
+
+p{
+  font-size: 1.4em;
+}
+
+div {
+  display: block;
+  border-width: 0px;
+  padding: 0px;
+  margin: auto;
+}
+
+.main{
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  left: 0;
+  width: 100%;
+  /* z-index: 3; */
+  background-origin: border-box;
+}
+
+.content-wrapper {
+  max-width: 1000px;
+  margin: auto;
+  padding: 0;
+}
+
+.top-part{
+  padding: 0px 30px 0px 30px;
+  border: 2px solid black;
+}
+
+.top-part p{
+  word-wrap:break-word;
+  line-height: 1.5;
+  letter-spacing: 0.08em;
+}
+
+.target-sentence-wrapper{
+  padding-top: 20px;
+}
+
+.form-wrapper{
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+form fieldset{
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+form fieldset input{
+  border: 2px solid orange;
+  width: 200px;
+  height: auto;
+  font-size: 1.5em;
+  margin: 0;
+  padding: 10px;
+}
+
+.buttons{
+  padding-top: 10px;
+  text-align: center;
+}
+
+.buttons input{
+  width: 150px;
+  margin: 0 20px 0 20px;
+  text-align: center;
+  font-size: 1.8em;
+}
+
+.buttons input:hover{
+  background-color: rgba(0, 0, 0, 0.3);
+}
