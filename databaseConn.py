@@ -1,6 +1,5 @@
 
 import pymysql
-import random
 
 class MySqlHelper(object):
     def __init__(self):
@@ -16,7 +15,6 @@ class MySqlHelper(object):
         self.conn.close()
 
     def get_num(self, table):
-        #得到表的数据数量
         query = "select count(*) from {}".format(table)
         self.cursor.execute(query)
         data = self.cursor.fetchall()[0][0]
@@ -106,9 +104,6 @@ if __name__ == '__main__':
     sqlh = MySqlHelper()
     sqlh.connect()
 
-    num = sqlh.get_num( tables)
-    num_1 = sqlh.fist_data_id(tables)
-    print( d )
     idx = sqlh.query_by_id(1000, tables)
     print(idx)
     idx = sqlh.query_by_id(999, tables)
