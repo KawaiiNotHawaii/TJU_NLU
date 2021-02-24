@@ -7,9 +7,11 @@ var target_sentence
 var target_word;
 var hasContext;
 
+var num_prompt;
+
 window.onload = function(){
   fetchARecord();
-
+  num_prompt = document.getElementById("num_prompt");
   // call the submit function when user hits the enter button
   var input = document.getElementById("answer");
   input.addEventListener("keydown", function(event) {
@@ -39,6 +41,8 @@ function fetchARecord() {
 
         document.getElementById('context').innerHTML = context;
         document.getElementById('target-sentence').innerHTML = target_sentence + '________';
+
+        num_prompt.innerHTML = "字数：" + target_word.length;
       });
 
 };
