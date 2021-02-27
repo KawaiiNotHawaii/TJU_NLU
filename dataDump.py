@@ -12,7 +12,10 @@ for path in ('test_dev/dev.json', 'test_dev/test.json'):
             json_obj = json.loads(line)
             del json_obj['gpt_out']
             del json_obj['ppl']
-            tup = (json_obj['c'][0].replace(" ", ""), json_obj['t'].replace(" ", ""), json_obj['words'].replace(" ", ""))
+            context=""
+            for c_text in json_obj['c']:
+                context += c_text.replace(" ", "")
+            tup = (context, json_obj['t'].replace(" ", ""), json_obj['words'].replace(" ", ""))
             data.append(tup)
 
 print("{} records to be dump".format(len(data)))
@@ -39,4 +42,3 @@ cursor.executemany(query, data)
 conn.commit()
 conn.close()
 print("all settled and ready to go;")
-
