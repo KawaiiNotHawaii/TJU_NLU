@@ -59,11 +59,11 @@ def fetch_randomly():
     # message = {'id':data[0], 'context':data[1], 'targetSentence':data[2], 'targetWord':data[3]}
     res = sqlh.fetch_randomly()
     if (res is None):
-        message = {'id':data[0], 'context':'所有数据均已标注完成！', 'targetSentence':'所有数据均已标注完成！', 'targetWord':data[3], 'hasContext':hasContext}
+        message = {'isFinished':True}
         return jsonify(message)
     else:
         (data, hasContext) = res
-        message = {'id':data[0], 'context':data[1], 'targetSentence':data[2], 'targetWord':data[3], 'hasContext':hasContext}
+        message = {'isFinished':False, 'id':data[0], 'context':data[1], 'targetSentence':data[2], 'targetWord':data[3], 'hasContext':hasContext}
         print(res)
         return jsonify(message)  # serialize and use JSON headers
 

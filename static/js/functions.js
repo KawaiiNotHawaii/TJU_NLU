@@ -31,20 +31,24 @@ function fetchARecord() {
       .then((response) => {
         return response.json();
       }).then((data) => {
-        novel_id = data.id;
-        context = data.context;
-        target_sentence = data.targetSentence;
-        target_word = data.targetWord;
-        hasContext = data.hasContext;
-
-        if (hasContext) {
-          document.getElementById('context').innerHTML = context;
-          document.getElementById('target-sentence').innerHTML = target_sentence + '________';
-          num_prompt.innerHTML = "字数：" + target_word.length;
+        if(data.isFinished){
+          document.getElementById('main').innerHTML = "所有数据均已标记完成！"
         } else {
-          document.getElementById('context-wrapper').innerHTML = "";
-          document.getElementById('target-sentence').innerHTML = target_sentence + '________';
-          num_prompt.innerHTML = "字数：" + target_word.length;
+          novel_id = data.id;
+          context = data.context;
+          target_sentence = data.targetSentence;
+          target_word = data.targetWord;
+          hasContext = data.hasContext;
+
+          if (hasContext) {
+            document.getElementById('context').innerHTML = context;
+            document.getElementById('target-sentence').innerHTML = target_sentence + '________';
+            num_prompt.innerHTML = "字数：" + target_word.length;
+          } else {
+            document.getElementById('context-wrapper').innerHTML = "";
+            document.getElementById('target-sentence').innerHTML = target_sentence + '________';
+            num_prompt.innerHTML = "字数：" + target_word.length;
+          }
         }
 
       });
