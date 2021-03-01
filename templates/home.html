@@ -28,18 +28,17 @@
           <div class="form-wrapper">
             <h2>你的猜测:</h2>
             <form name="form" id='form'>
-              <fieldset>
-                <input type="text" name="answer" id="answer" required="required" placeholder="请键入">
-              </fieldset>
+              <input type="text" name="answer" id="answer" required="required" placeholder="请键入">
+              <p id="num_prompt">字数：</p>
             </form>
-            <p id="num_prompt">字数：</p>
+            <!-- buttons put inside the form may not be able to call the js function properly -->
+            <div class='buttons'>
+              <button id="submit" onClick="submit()">提交</button>
+              <button id="next" onClick="submit()">猜不到</button>
+            </div>
           </div>
         </div>
 
-        <div class="buttons">
-          <input type="button" id="submit" value="提交" onClick="submit()">
-          <input type="button" id="next" value="猜不到" onClick="submit()">
-        </div>
 
       </div>
 

@@ -40,17 +40,26 @@ def validate():
                 if (code == 0):
                     session['user_id'] = user_id
                     session.permanent = True
-                    print('登陆成功')
+
+                    message = '登陆成功'
+                    print(message)
                     return redirect('/')
                 elif (code == 1):
-                    print('密码错误')
+                    message = '密码错误'
+                    print(message)
+                    flash(message)
                 elif (code == 2):
-                    print('用户名不存在')
+                    message = '用户名不存在'
+                    print(message)
+                    flash(message)
             except:
-                print("用户名必须为数字:")
-                return redirect('/login')
+                message = '用户名必须为数字'
+                print(message)
+                flash(message)
         else:
-            print('用户名、密码不能为空')
+            message = '用户名或密码不能为空'
+            print(message)
+            flash('用户名或密码不能为空')
     return redirect('/login')
 
 @app.route('/fetch', methods=['GET'])
@@ -69,6 +78,7 @@ def fetch_randomly():
 
 @app.route('/post', methods=['POST'])
 def post_to_db():
+    print("recieved the posted guess!")
     if (request.is_json):
         request_data = request.get_json()
         novel_id  = int(request_data["novel_id"])

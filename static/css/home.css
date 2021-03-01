@@ -1,8 +1,18 @@
 body, div, section, header {
   line-height: 1;
   display: block;
-  font-family: "宋体", Helvetica, sans-serif;
+  font-family: "宋体", serif;
   box-sizing: border-box;
+}
+
+body {
+  background: #76b852; /* fallback for old browsers */
+  background: -webkit-linear-gradient(right, #76b852, #8DC26F);
+  background: -moz-linear-gradient(right, #76b852, #8DC26F);
+  background: -o-linear-gradient(right, #76b852, #8DC26F);
+  background: linear-gradient(to left, #76b852, #8DC26F);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 h2{
@@ -26,19 +36,21 @@ div {
   padding: 0;
   left: 0;
   width: 100%;
-  /* z-index: 3; */
   background-origin: border-box;
+  z-index: 1;
 }
 
 .content-wrapper {
   max-width: 1000px;
   margin: auto;
-  padding: 0;
+  margin: 0 auto 100px;
+  padding: 45px;
+  background: #FFFFFF;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
 }
 
 .top-part{
   padding: 0px 30px 0px 30px;
-  border: 2px solid black;
 }
 
 .top-part p{
@@ -56,33 +68,43 @@ div {
   padding-bottom: 20px;
 }
 
-form fieldset{
+form{
   border: none;
   margin: 0;
   padding: 0;
 }
 
-form fieldset input{
-  border: 2px solid orange;
+form input{
+  outline: 0;
+  background: #f2f2f2;
   width: 200px;
-  height: auto;
+  border: 0;
+  margin: 0 0 15px;
+  padding: 15px;
+  box-sizing: border-box;
   font-size: 1.5em;
-  margin: 0;
-  padding: 10px;
 }
 
 .buttons{
-  padding-top: 10px;
   text-align: center;
 }
 
-.buttons input{
+.buttons button {
+  font-family: sans-serif;
+  text-transform: uppercase;
+  outline: 0;
+  background: #4CAF50;
   width: 150px;
-  margin: 0 20px 0 20px;
-  text-align: center;
-  font-size: 1.8em;
+  border: 0px;
+  padding: 15px;
+  margin: 0 30px 0 30px;
+  color: #FFFFFF;
+  font-size: 1.3em;
+  -webkit-transition: all 0.3 ease;
+  transition: all 0.3 ease;
+  cursor: pointer;
 }
 
-.buttons input:hover{
-  background-color: rgba(0, 0, 0, 0.3);
+.buttons button:hover,.form button:active,.form button:focus {
+  background: #43A047;
 }
