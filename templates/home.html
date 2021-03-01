@@ -4,9 +4,7 @@
     <meta charset="utf-8">
     <meta name="copyright" content="This site is developed by TJU NLP lab. Copyright 2021, All rights reserved.">
     <title>NLU数据标注平台</title>
-    <link href="Home.css" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="{{ url_for('static',    filename='css/home.css') }}">
-    <!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
     <script src="{{url_for('static', filename='js/functions.js')}}"></script>
   </head>
 
@@ -17,7 +15,7 @@
 
         <div class="top-part">
           <div class="passage-wrapper">
-            <div class="context-wrapper">
+            <div class="context-wrapper" id="context-wrapper">
               <h2>语境:</h2>
               <p id="context">正在加载</p>
             </div>

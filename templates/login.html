@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="copyright" content="This site is developed by TJU NLP lab. Copyright 2021, All rights reserved.">
+    <title>平台登录</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+    <script src="{{url_for('static', filename='js/login.js')}}"></script>
+  </head>
+  <body>
+
+    <form action="/validate" method="POST">
+      <br>
+      <label for='user_id'>用户名：</label><input type="text" id='user_id' name='user_id' placeholder="请输入用户名">
+      <br>
+      <label for='pwd'>密码：</label><input type="password" id="pwd" name='pwd' placeholder="请输入密码">
+      <br>
+      <input type="submit" value="登录"></input>
+    </form>
+
+  </body>
+</html>

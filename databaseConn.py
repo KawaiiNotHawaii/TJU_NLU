@@ -49,7 +49,12 @@ class MySqlHelper(object):
         data = self.select_with_context()
         if (data is not None):
             return (data, True)
-        return (self.select_without_context(), False)
+        else:
+            data = self.select_without_context()
+            if (data is not None):
+                return (data, False)
+            else:
+                return None
 
     def select_with_context(self):
         # randomly select a record to be evaluated with context
@@ -58,10 +63,10 @@ class MySqlHelper(object):
             query = "SELECT * FROM output_novels WHERE hitTimesInContext<2 ORDER BY RAND() LIMIT 1"
             self.cursor.execute(query)
             data = self.cursor.fetchall()
-            if(id is None):
-                return None
-            else:
+            if data:
                 return self.query_by_id(data[0][0], "novels")
+            else:
+                return None
         except Exception as e:
             print("Selection with context failed:", e)
             return "Selection with context failed"
@@ -73,8 +78,11 @@ class MySqlHelper(object):
             # TODO: this query only fetches novels that passed the evaluation with context.
             query = "SELECT * FROM output_novels WHERE hitTimesInContext<2 AND missTimesWithoutContext<10 ORDER BY RAND() LIMIT 1"
             self.cursor.execute(query)
-            id = self.cursor.fetchall()[0][0]
-            return self.query_by_id(id, "novels")
+            data = self.cursor.fetchall()
+            if data:
+                return self.query_by_id(data[0][0], "novels")
+            else:
+                return None
         except Exception as e:
             print("Selection without context failed:", e)
             return "Selection without context failed"
@@ -94,8 +102,20 @@ class MySqlHelper(object):
             self.cursor.execute(query)
             self.conn.commit();
         except Exception as e:
-            print("Deleting from contextFilter failed:", e)
-            return "Deleting from contextFilter failed"
+            print("Deleting from output_novels failed:", e)
+            return "Deleting from output_novels failed"
+
+    def login_validation(self, user_id, pwd):
+        query = "SELECT * FROM users WHERE id={}".format(user_id)
+        self.cursor.execute(query)
+        data = self.cursor.fetchall()
+        if data:
+            if (data[0][1]==pwd):
+                return 0
+            else:
+                return 1
+        else:
+            return 2
 
 
 if __name__ == '__main__':

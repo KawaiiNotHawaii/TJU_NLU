@@ -1,7 +1,5 @@
 
 var novel_id;
-// TODO: user user_id or not? add user_id logic if use it
-var user_id=1;
 var context;
 var target_sentence
 var target_word;
@@ -39,10 +37,16 @@ function fetchARecord() {
         target_word = data.targetWord;
         hasContext = data.hasContext;
 
-        document.getElementById('context').innerHTML = context;
-        document.getElementById('target-sentence').innerHTML = target_sentence + '________';
+        if (hasContext) {
+          document.getElementById('context').innerHTML = context;
+          document.getElementById('target-sentence').innerHTML = target_sentence + '________';
+          num_prompt.innerHTML = "字数：" + target_word.length;
+        } else {
+          document.getElementById('context-wrapper').innerHTML = "";
+          document.getElementById('target-sentence').innerHTML = target_sentence + '________';
+          num_prompt.innerHTML = "字数：" + target_word.length;
+        }
 
-        num_prompt.innerHTML = "字数：" + target_word.length;
       });
 
 };
@@ -51,7 +55,7 @@ function submit() {
   var guess = document.getElementById('answer').value.trim();
   var guessed = guess.localeCompare(target_word)==0;
 
-  var data = {'novel_id':novel_id, 'user_id':user_id, 'hasContext':hasContext, 'guess':guess, 'isRight':guessed};
+  var data = {'novel_id':novel_id, 'hasContext':hasContext, 'guess':guess, 'isRight':guessed};
 
   fetch("/post", {
     method: "POST",
@@ -66,15 +70,5 @@ function submit() {
         // alert(data.message);
         fetchARecord();
       });
-
-  // fetch(`/post/${guessed}`,{
-  //   method:'POST'})
-  //     .then((response) => {
-  //       return response.json();
-  //     }).then((data) => {
-  //       // TODO: DELETE; only for debug
-  //       alert(data.message);
-  //     });
-
 
 }
