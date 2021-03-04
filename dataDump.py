@@ -3,10 +3,11 @@
 
 import json
 import pymysql
+import hosts
 
 data = []
 
-for path in ('test_dev/dev.json', 'test_dev/test.json'):
+for path in ('data/dev.json', 'data/test.json'):
     with open(path) as f:
         for line in f:
             json_obj = json.loads(line)
@@ -20,8 +21,8 @@ for path in ('test_dev/dev.json', 'test_dev/test.json'):
 
 print("{} records to be dump".format(len(data)))
 
-conn = pymysql.connect(host="rm-2ze3ya354780fhb70fm.mysql.rds.aliyuncs.com", port=3306,
-                            user="tjunlu", password="Tjunlu123", db="chinese_novel")
+conn = pymysql.connect(host=info['host'], port=info['port'],
+                            user=info['user'], password=info['password'], db=info['db'])
 cursor = conn.cursor()
 
 clear_guesses = "DELETE FROM guesses"
