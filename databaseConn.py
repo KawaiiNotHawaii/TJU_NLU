@@ -1,14 +1,22 @@
-
+import json
 import pymysql
 
 class MySqlHelper(object):
     def __init__(self):
+        with open("./hosts.json", 'r') as f:
+            info = json.loads(f.readline())
+        f.close()
+        self.host = info['host']
+        self.port = info['port']
+        self.user = info['user']
+        self.password = info['password']
+        self.db = info['db']
         self.conn = None
         self.cursor = None
 
     def connect(self):
-        self.conn = pymysql.connect(host="rm-2ze3ya354780fhb70fm.mysql.rds.aliyuncs.com", port=3306,
-                               user="tjunlu", password="Tjunlu123", db="chinese_novel")
+        self.conn = pymysql.connect(host=self.host, port=self.port,
+                               user=self.user, password=self.password, db=self.db)
         self.cursor = self.conn.cursor()
 
     def disconnect(self):
