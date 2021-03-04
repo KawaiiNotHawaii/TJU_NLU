@@ -1,16 +1,15 @@
 import json
 import pymysql
+import hosts
 
 class MySqlHelper(object):
     def __init__(self):
-        with open("./hosts.json", 'r') as f:
-            info = json.loads(f.readline())
-        f.close()
-        self.host = info['host']
-        self.port = info['port']
-        self.user = info['user']
-        self.password = info['password']
-        self.db = info['db']
+        host = hosts.Hosts()
+        self.host = host.host
+        self.port = host.port
+        self.user = host.user
+        self.password = host.password
+        self.db = host.db
         self.conn = None
         self.cursor = None
 

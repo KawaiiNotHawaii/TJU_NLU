@@ -3,6 +3,7 @@
 
 import json
 import pymysql
+import hosts
 
 data = []
 
@@ -19,9 +20,7 @@ for path in ('data/dev.json', 'data/test.json'):
             data.append(tup)
 
 print("{} records to be dump".format(len(data)))
-with open("./hosts.json", 'r') as f:
-    info = json.loads(f.readline())
-f.close()
+
 conn = pymysql.connect(host=info['host'], port=info['port'],
                             user=info['user'], password=info['password'], db=info['db'])
 cursor = conn.cursor()
