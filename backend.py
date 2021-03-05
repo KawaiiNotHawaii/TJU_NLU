@@ -72,8 +72,14 @@ def fetch_randomly():
         return jsonify(message)
     else:
         (data, hasContext) = res
-        message = {'isFinished':False, 'id':data[0], 'context':data[1], 'targetSentence':data[2], 'targetWord':data[3], 'hasContext':hasContext}
-        print(res)
+
+        message = {'isFinished':False, 'id':data[0], 'context':data[2] + data[3], 'targetSentence':data[3], 'targetWord':data[4], 'hasContext':hasContext}
+        choices = data[6].split(' ')
+        for i in range(6):
+            message['choice{}'.format(i+1)] = ''
+        for idx, choice in enumerate(choices):
+            message['choice{}'.format(idx+1)] = choice
+        print(message)
         return jsonify(message)  # serialize and use JSON headers
 
 @app.route('/post', methods=['POST'])
@@ -81,16 +87,20 @@ def post_to_db():
     print("recieved the posted guess!")
     if (request.is_json):
         request_data = request.get_json()
+        print(request_data)
         novel_id  = int(request_data["novel_id"])
         user_id = session.get('user_id')
         print('Guess recieved, annotater ID:', user_id)
         hasContext = bool(int(request_data["hasContext"]))
         guess = request_data["guess"]
+        target_word = request_data['t_word']
         isRight = bool(int(request_data["isRight"]))
 
-        print("novel_id:", novel_id, "; user_id:", user_id, "; hasContext:", hasContext, "; guess:", guess, "; isRight:", isRight)
-        sqlh.insert_into_guesses(novel_id, user_id, hasContext, guess, isRight)
+        print("novel_id:", novel_id, "; user_id:", user_id, "; hasContext:", hasContext, "; guess:", guess, "; t_word:",target_word, "; isRight:", isRight)
+        sqlh.insert_into_guesses(novel_id, user_id, hasContext, guess, target_word,  isRight)
 
+        sqlh.update_times_col("output_novels",novel_id, "hitTimesInContext")
+        '''
         if isRight:
             if hasContext:
                 print("Guess WITH context is RIGHT, update (hitTimesInContext)")
@@ -105,6 +115,7 @@ def post_to_db():
             else:
                 print("Guess WITHOUT context is WRONG, update (missTimesWithoutContext)")
                 sqlh.update_times_col(novel_id, "missTimesWithoutContext")
+        '''
 
         # TODO: database operations here
 

@@ -38,9 +38,9 @@ class MySqlHelper(object):
 
     # operations for TABLE guesses
 
-    def insert_into_guesses(self, novel_id, user_id, hasContext, guess, isRight):
+    def insert_into_guesses(self, novel_id, user_id, hasContext, guess, target_word, isRight):
         try:
-            query = """INSERT INTO guesses VALUES ({}, {}, {}, "{}", {})""".format(novel_id, user_id, int(hasContext), guess, int(isRight))
+            query = """INSERT INTO guesses VALUES ({}, {}, {}, "{}","{}", {})""".format(novel_id, user_id, int(hasContext), guess,target_word, int(isRight))
             print("insertion query is:", query)
             self.cursor.execute(query)
             self.conn.commit()
@@ -63,11 +63,25 @@ class MySqlHelper(object):
             else:
                 return None
 
-    def select_with_context(self):
+    def random_select_with_context(self):
         # randomly select a record to be evaluated with context
         print("select with context")
         try:
             query = "SELECT * FROM output_novels WHERE hitTimesInContext<2 ORDER BY RAND() LIMIT 1"
+            self.cursor.execute(query)
+            data = self.cursor.fetchall()
+            if data:
+                return self.query_by_id(data[0][0], "novels")
+            else:
+                return None
+        except Exception as e:
+            print("Selection with context failed:", e)
+            return "Selection with context failed"
+
+    def select_with_context(self):
+        # randomly select a record to be evaluated with context
+        try:
+            query = "SELECT * FROM output_novels WHERE hitTimesInContext<1"
             self.cursor.execute(query)
             data = self.cursor.fetchall()
             if data:
@@ -94,9 +108,18 @@ class MySqlHelper(object):
             print("Selection without context failed:", e)
             return "Selection without context failed"
 
-    def update_times_col(self, novel_id, col):
+    def update_times_col(self, tabel, novel_id, col):
         try:
-            query = "UPDATE output_novels SET {}={}+1 WHERE id={}".format(col, col, novel_id)
+            query = "UPDATE {} SET {}={}+1 WHERE id={}".format(tabel, col, col, novel_id)
+            self.cursor.execute(query)
+            self.conn.commit();
+        except Exception as e:
+            print("Updating output_novels failed:", e)
+            return "Updating output_novels failed"
+
+    def update_islabeled(self, table, novel_id):
+        try:
+            query = "UPDATE {} SET is_labeled=1 WHERE novel_id={}".format(table,novel_id)
             self.cursor.execute(query)
             self.conn.commit();
         except Exception as e:
@@ -123,6 +146,7 @@ class MySqlHelper(object):
                 return 1
         else:
             return 2
+
 
 
 if __name__ == '__main__':

@@ -19,28 +19,17 @@
               <h2>语境:</h2>
               <p id="context">正在加载</p>
             </div>
+            <div class="target-sentence-wrapper">
+              <h2>目标句:</h2>
+              <p id="target-sentence">正在加载</p>
+            </div>
           </div>
 
           <div class="form-wrapper">
             <h2>你的猜测:</h2>
             <form name="form" id='form'>
-                <input type="radio" id="choice0" name="choices" value="0", checked="true">
-                <label for="choice0", id="label_c0" >猜不到</label><br>
-                <input type="radio" id="choice1" name="choices" value="1">
-                <label for="choice1", id="label_c1"></label><br>
-                <input type="radio" id="choice2" name="choices" value="2">
-                <label for="choice2", id="label_c2"></label><br>
-                <input type="radio" id="choice3" name="choices" value="3">
-                <label for="choice3", id="label_c3"></label><br>
-                <input type="radio" id="choice4" name="choices" value="4">
-                <label for="choice4", id="label_c4"></label><br>
-                <input type="radio" id="choice5" name="choices" value="5">
-                <label for="choice5", id="label_c5"></label><br>
-                <input type="radio" id="choice6" name="choices" value="6">
-                <label for="choice6", id="label_c6"></label><br>
-                <input type="text" name="answer" id="answer" required="required" placeholder="请键入">
-                <p id="num_prompt">字数：</p>
-
+              <input type="text" name="answer" id="answer" required="required" placeholder="请键入">
+              <p id="num_prompt">字数：</p>
             </form>
             <!-- buttons put inside the form may not be able to call the js function properly -->
             <div class='buttons'>
