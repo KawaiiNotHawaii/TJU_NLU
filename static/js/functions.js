@@ -67,33 +67,41 @@ function fetchARecord() {
             document.getElementById('context').innerHTML = context+ '________';
             //document.getElementById('target-sentence').innerHTML = target_sentence
             document.getElementById("choice0").checked=true
-            if (choice1 == ''){
-                document.getElementById("choice1").disabled=true
-            }
-            document.getElementById('label_c1').innerHTML = choice1;
 
-            if (choice2.length == 0){
-                document.getElementById("choice2").disabled=true
+            for(var i=1; i<choices.length; i++){
+              if(choices[i].length == 0){
+                document.getElementById("choice"+i).disabled=true
+              }
+              document.getElementById('label_c'+i).innerHTML = choices[i];
             }
-            document.getElementById('label_c2').innerHTML = choice2;
-            if (choice3.length == 0){
-                document.getElementById("choice3").disabled=true
-            }
-            document.getElementById('label_c3').innerHTML = choice3;
-            if (choice4.length == 0){
-                document.getElementById("choice4").disabled=true
-            }
-            document.getElementById('label_c4').innerHTML = choice4;
-
-            if (choice5.length == 0){
-                document.getElementById("choice5").disabled=true
-            }
-            document.getElementById('label_c5').innerHTML = choice5;
-
-            if (choice6.length == 0){
-                document.getElementById("choice6").disabled=true
-            }
-            document.getElementById('label_c6').innerHTML = choice6;
+            
+            // if (choice1 == ''){
+            //     document.getElementById("choice1").disabled=true
+            // }
+            // document.getElementById('label_c1').innerHTML = choice1;
+            //
+            // if (choice2.length == 0){
+            //     document.getElementById("choice2").disabled=true
+            // }
+            // document.getElementById('label_c2').innerHTML = choice2;
+            // if (choice3.length == 0){
+            //     document.getElementById("choice3").disabled=true
+            // }
+            // document.getElementById('label_c3').innerHTML = choice3;
+            // if (choice4.length == 0){
+            //     document.getElementById("choice4").disabled=true
+            // }
+            // document.getElementById('label_c4').innerHTML = choice4;
+            //
+            // if (choice5.length == 0){
+            //     document.getElementById("choice5").disabled=true
+            // }
+            // document.getElementById('label_c5').innerHTML = choice5;
+            //
+            // if (choice6.length == 0){
+            //     document.getElementById("choice6").disabled=true
+            // }
+            // document.getElementById('label_c6').innerHTML = choice6;
 
             num_prompt.innerHTML = "字数：" + target_word.length;
           } else {
