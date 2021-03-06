@@ -7,24 +7,27 @@ var hasContext;
 var choices = [];
 var num_prompt;
 
+var use_checklist;
+var buffer4checklist;
+var buffer4textInput;
+
 window.onload = function(){
+  use_checklist = true;
   fetchARecord();
   num_prompt = document.getElementById("num_prompt");
-  // call the submit function when user hits the enter button
-  var input = document.getElementById("answer");
-  input.addEventListener("keydown", function(event) {
-    if (event.keyCode === 13) {
-      // prevent the default form action
-      event.preventDefault();
-      document.getElementById("submit").click();
-    }
-  });
+
 };
 
-// fetch a RANDOM row that DID NOT OCCUR
+// fetch a RANDOM row that DID ! OCCUR
 // TODO: delete the index parameter after enabling randomly selecting in the backend
 function fetchARecord() {
-  document.getElementById('answer').value = '';
+  choices = [];
+  buffer4textInput="";
+  buffer4checklist=0;
+
+  if (!(use_checklist)) {
+    document.getElementById('answer').value = '';
+  }
 
   fetch("/fetch",{
     method:'GET'})
@@ -104,17 +107,23 @@ function fetchARecord() {
 
 };
 
-function submit() {
-  //var guess = document.getElementById('answer').value.trim();
-  var radio = document.getElementsByName("choices")
-  var guess = null
-  for (i=0; i < radio.length; i++){
-    if (radio[i].checked){
-      guess = choices[i]
-      break
+function getSelected() {
+  var checklist = document.getElementsByName("choices")
+  for (i=0; i < checklist.length; i++){
+    if (checklist[i].checked){
+      return i;
     }
   }
-  choices = []
+}
+
+function submit() {
+  if (use_checklist) {
+    var guess = null
+    guess = choices[getSelected()]
+  } else {
+    var guess = document.getElementById('answer').value.trim();
+  }
+
   //alert(guess)
   var guessed = guess.localeCompare(target_word)==0;
   var data = {'novel_id':novel_id, 'hasContext':hasContext, 'guess':guess,'isRight':guessed,'t_word':target_word};
@@ -132,5 +141,40 @@ function submit() {
         // alert(data.message);
         fetchARecord();
       });
+
+}
+
+function changeView() {
+  use_checklist = !(use_checklist);
+
+  if (use_checklist) {
+    buffer4textInput = document.getElementById("answer").value;
+
+    document.getElementById('form').innerHTML =
+    "<input type=\"radio\" id=\"choice0\" name=\"choices\" value=\"0\"><label for=\"choice0\", id=\"label_c0\" >猜不到</label><br><input type=\"radio\" id=\"choice1\" name=\"choices\" value=\"1\"><label for=\"choice1\", id=\"label_c1\"></label><br><input type=\"radio\" id=\"choice2\" name=\"choices\" value=\"2\"><label for=\"choice2\", id=\"label_c2\"></label><br><input type=\"radio\" id=\"choice3\" name=\"choices\" value=\"3\"><label for=\"choice3\", id=\"label_c3\"></label><br><input type=\"radio\" id=\"choice4\" name=\"choices\" value=\"4\"><label for=\"choice4\", id=\"label_c4\"></label><br><input type=\"radio\" id=\"choice5\" name=\"choices\" value=\"5\"><label for=\"choice5\", id=\"label_c5\"></label><br><input type=\"radio\" id=\"choice6\" name=\"choices\" value=\"6\"><label for=\"choice6\", id=\"label_c6\"></label><br>";
+
+    for(var i=1; i<choices.length; i++){
+      document.getElementById('label_c'+i).innerHTML = choices[i];
+    }
+
+    checkedBtn = document.getElementById("choice"+buffer4checklist);
+    checkedBtn.checked = true;
+
+  } else {
+    buffer4checklist = getSelected();
+
+    document.getElementById('form').innerHTML = "<input type=\"text\" name=\"answer\" id=\"answer\" required=\"required\" placeholder=\"请键入\">";
+    document.getElementById('answer').value = buffer4textInput;
+    // call the submit function when user hits the enter button
+    var input = document.getElementById("answer");
+    input.addEventListener("keydown", function(event) {
+      if (event.keyCode === 13) {
+        // prevent the default form action
+        event.preventDefault();
+        document.getElementById("submit").click();
+      }
+    });
+  }
+
 
 }
