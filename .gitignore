@@ -1,4 +1,6 @@
 venv/
 data/
+shibiao/
 .idea
 hosts.py
+test1.py

@@ -87,7 +87,6 @@ def post_to_db():
     print("recieved the posted guess!")
     if (request.is_json):
         request_data = request.get_json()
-        print(request_data)
         novel_id  = int(request_data["novel_id"])
         user_id = session.get('user_id')
         print('Guess recieved, annotater ID:', user_id)

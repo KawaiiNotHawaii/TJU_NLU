@@ -22,19 +22,19 @@ class Choies(object):
 
 data = []
 
-for path in ('data/dev.json', 'data/test.json'):
+for path in ('data/dev_not_context.json', 'data/test_not_context.json'):
     tag = path.split('/')[-1].split('.')[0]
     nums = 0
     with open(path, encoding='utf-8') as f:
         for line in f:
             choiess = []
             json_obj = json.loads(line)
-            del json_obj['gpt_out']
-            del json_obj['ppl']
+
             context=""
             for c_text in json_obj['c']:
                 context += c_text.replace(" ", "")
             choiess.append(Choies(json_obj['words'], 1))
+            choices_text = []
             for choice in json_obj['gpt_ft_out']:
                 choice = choice.replace('[UNK]', '')
                 c_context = ''
@@ -43,7 +43,10 @@ for path in ('data/dev.json', 'data/test.json'):
                         continue
                     c_context += c
                 if c_context != '':
-                    choiess.append(Choies(c_context, 0))
+                    choices_text.append(c_context)
+            choices_text = list(set(choices_text))
+            for c_context in choices_text:
+                choiess.append(Choies(c_context, 0))
             if len(choiess) == 1:
                 #print(json_obj['gpt_ft_out'])
                 nums += 1
@@ -61,8 +64,10 @@ for path in ('data/dev.json', 'data/test.json'):
             #print(choice_list)
             #print(choice_index_list)
             #print(json_obj['novel_id'])
-            tup = (int(json_obj['novel_id']), context, json_obj['t'].replace(" ", ""), json_obj['words'].replace(" ", ""), tag, choice_text, index_text, int(0))
+            tup = (int(json_obj['novel_id']), context, json_obj['t'].replace(" ", ""), json_obj['words'].replace(" ", ""), tag, choice_text, index_text)
             data.append(tup)
+random.shuffle(data)
+data = data[:150]
 
 
 
@@ -86,7 +91,7 @@ reset_auto_increment = "ALTER TABLE novels AUTO_INCREMENT=0"
 cursor.execute(reset_auto_increment)
 print("AUTO_INCREMENT reset;")
 
-query = "INSERT INTO novels (novel_id, context, target_sentence, target_word, tag, choice, choice_index, is_labeled) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+query = "INSERT INTO novels (novel_id, context, target_sentence, target_word, tag, choice, choice_index) VALUES (%s, %s, %s, %s, %s, %s, %s)"
 cursor.executemany(query, data)
 
 conn.commit()

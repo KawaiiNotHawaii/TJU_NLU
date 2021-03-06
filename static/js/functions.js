@@ -54,9 +54,16 @@ function fetchARecord() {
           choices.push(choice5)
           choices.push(choice6)
 
+          document.getElementById("choice1").disabled=false
+          document.getElementById("choice2").disabled=false
+          document.getElementById("choice3").disabled=false
+          document.getElementById("choice4").disabled=false
+          document.getElementById("choice5").disabled=false
+          document.getElementById("choice6").disabled=false
           if (hasContext) {
             document.getElementById('context').innerHTML = context+ '________';
             //document.getElementById('target-sentence').innerHTML = target_sentence
+            document.getElementById("choice0").checked=true
             if (choice1 == ''){
                 document.getElementById("choice1").disabled=true
             }
@@ -83,7 +90,6 @@ function fetchARecord() {
             if (choice6.length == 0){
                 document.getElementById("choice6").disabled=true
             }
-
             document.getElementById('label_c6').innerHTML = choice6;
 
             num_prompt.innerHTML = "字数：" + target_word.length;

@@ -57,11 +57,7 @@ class MySqlHelper(object):
         if (data is not None):
             return (data, True)
         else:
-            data = self.select_without_context()
-            if (data is not None):
-                return (data, False)
-            else:
-                return None
+            return None
 
     def random_select_with_context(self):
         # randomly select a record to be evaluated with context
