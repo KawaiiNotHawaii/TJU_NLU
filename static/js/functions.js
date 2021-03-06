@@ -18,7 +18,7 @@ window.onload = function(){
 
 };
 
-// fetch a RANDOM row that DID ! OCCUR
+// fetch a RANDOM row that DID NOT OCCUR
 // TODO: delete the index parameter after enabling randomly selecting in the backend
 function fetchARecord() {
   choices = [];
@@ -74,7 +74,7 @@ function fetchARecord() {
               }
               document.getElementById('label_c'+i).innerHTML = choices[i];
             }
-            
+
             // if (choice1 == ''){
             //     document.getElementById("choice1").disabled=true
             // }
