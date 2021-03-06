@@ -21,10 +21,10 @@ class Choies(object):
 
 
 data = []
+nums = 0
 
-for path in ('data/dev_not_context.json', 'data/test_not_context.json'):
+for path in ['shibiao/without_context_step1.json']:
     tag = path.split('/')[-1].split('.')[0]
-    nums = 0
     with open(path, encoding='utf-8') as f:
         for line in f:
             choiess = []
@@ -35,6 +35,10 @@ for path in ('data/dev_not_context.json', 'data/test_not_context.json'):
                 context += c_text.replace(" ", "")
             choiess.append(Choies(json_obj['words'], 1))
             choices_text = []
+            guess = json_obj['guess']
+            if guess == "猜不到":
+                nums += 1
+                continue
             for choice in json_obj['gpt_ft_out']:
                 choice = choice.replace('[UNK]', '')
                 c_context = ''
@@ -47,9 +51,7 @@ for path in ('data/dev_not_context.json', 'data/test_not_context.json'):
             choices_text = list(set(choices_text))
             for c_context in choices_text:
                 choiess.append(Choies(c_context, 0))
-            if len(choiess) == 1:
-                #print(json_obj['gpt_ft_out'])
-                nums += 1
+
             ##assert len(choiess) > 1
             random.shuffle(choiess)
             choice_list = []
@@ -67,7 +69,7 @@ for path in ('data/dev_not_context.json', 'data/test_not_context.json'):
             tup = (int(json_obj['novel_id']), context, json_obj['t'].replace(" ", ""), json_obj['words'].replace(" ", ""), tag, choice_text, index_text)
             data.append(tup)
 random.shuffle(data)
-data = data[:150]
+print(nums)
 
 
 
