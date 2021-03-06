@@ -57,12 +57,17 @@ function fetchARecord() {
           choices.push(choice5)
           choices.push(choice6)
 
-          document.getElementById("choice1").disabled=false
-          document.getElementById("choice2").disabled=false
-          document.getElementById("choice3").disabled=false
-          document.getElementById("choice4").disabled=false
-          document.getElementById("choice5").disabled=false
-          document.getElementById("choice6").disabled=false
+          // document.getElementById("choice1").disabled=false
+          // document.getElementById("choice2").disabled=false
+          // document.getElementById("choice3").disabled=false
+          // document.getElementById("choice4").disabled=false
+          // document.getElementById("choice5").disabled=false
+          // document.getElementById("choice6").disabled=false
+          for(var i=1; i<choices.length; i++) {
+            if (choices[i].length == 0) {
+              document.getElementById("choice" + i).disabled = false
+            }
+          }
           if (hasContext) {
             document.getElementById('context').innerHTML = context+ '________';
             //document.getElementById('target-sentence').innerHTML = target_sentence
@@ -74,6 +79,14 @@ function fetchARecord() {
               }
               document.getElementById('label_c'+i).innerHTML = choices[i];
             }
+            if(use_checklist)
+            {
+              document.getElementById("num_prompt").innerHTML= "";
+            }
+            else{
+              document.getElementById("num_prompt").innerHTML = "字数：" + target_word.length;
+            }
+
             
             // if (choice1 == ''){
             //     document.getElementById("choice1").disabled=true
@@ -103,11 +116,18 @@ function fetchARecord() {
             // }
             // document.getElementById('label_c6').innerHTML = choice6;
 
-            num_prompt.innerHTML = "字数：" + target_word.length;
+            // if (use_checklist){
+            //   num_prompt.innerHTML = "";
+            // }
+            // else
+            // {
+            //
+            // }
+
           } else {
             document.getElementById('context-wrapper').innerHTML = "";
             document.getElementById('target-sentence').innerHTML = target_sentence + '________';
-            num_prompt.innerHTML = "字数：" + target_word.length;
+            num_prompt.innerHTML = "";
           }
         }
 
@@ -125,11 +145,11 @@ function getSelected() {
 }
 
 function submit() {
+  var guess = null
   if (use_checklist) {
-    var guess = null
     guess = choices[getSelected()]
   } else {
-    var guess = document.getElementById('answer').value.trim();
+    guess = document.getElementById('answer').value.trim();
   }
 
   //alert(guess)
@@ -167,12 +187,16 @@ function changeView() {
 
     checkedBtn = document.getElementById("choice"+buffer4checklist);
     checkedBtn.checked = true;
+    document.getElementById("num_prompt").innerHTML= "";
+
 
   } else {
     buffer4checklist = getSelected();
 
     document.getElementById('form').innerHTML = "<input type=\"text\" name=\"answer\" id=\"answer\" required=\"required\" placeholder=\"请键入\">";
     document.getElementById('answer').value = buffer4textInput;
+    document.getElementById("num_prompt").innerHTML = "字数：" + target_word.length;
+
     // call the submit function when user hits the enter button
     var input = document.getElementById("answer");
     input.addEventListener("keydown", function(event) {
