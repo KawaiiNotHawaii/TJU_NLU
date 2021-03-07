@@ -43,26 +43,14 @@ function fetchARecord() {
           target_word = data.targetWord;
           hasContext = data.hasContext;
 
-          choice1 = data.choice1
-          choice2 = data.choice2
-          choice3 = data.choice3
-          choice4 = data.choice4
-          choice5 = data.choice5
-          choice6 = data.choice6
           choices.push('猜不到')
-          choices.push(choice1)
-          choices.push(choice2)
-          choices.push(choice3)
-          choices.push(choice4)
-          choices.push(choice5)
-          choices.push(choice6)
+          choices.push(data.choice1)
+          choices.push(data.choice2)
+          choices.push(data.choice3)
+          choices.push(data.choice4)
+          choices.push(data.choice5)
+          choices.push(data.choice6)
 
-          // document.getElementById("choice1").disabled=false
-          // document.getElementById("choice2").disabled=false
-          // document.getElementById("choice3").disabled=false
-          // document.getElementById("choice4").disabled=false
-          // document.getElementById("choice5").disabled=false
-          // document.getElementById("choice6").disabled=false
           for(var i=1; i<choices.length; i++) {
             if (choices[i].length == 0) {
               document.getElementById("choice" + i).disabled = false
@@ -71,63 +59,28 @@ function fetchARecord() {
           if (hasContext) {
             document.getElementById('context').innerHTML = context+ '________';
             //document.getElementById('target-sentence').innerHTML = target_sentence
-            document.getElementById("choice0").checked=true
 
-            for(var i=1; i<choices.length; i++){
-              if(choices[i].length == 0){
-                document.getElementById("choice"+i).disabled=true
-              }
-              document.getElementById('label_c'+i).innerHTML = choices[i];
-            }
             if(use_checklist)
             {
               document.getElementById("num_prompt").innerHTML= "";
+              document.getElementById("choice0").checked=true
+
+              for(var i=1; i<choices.length; i++){
+                if(choices[i].length == 0){
+                  document.getElementById("choice"+i).disabled=true
+                }
+                document.getElementById('label_c'+i).innerHTML = choices[i];
+              }
             }
             else{
               document.getElementById("num_prompt").innerHTML = "字数：" + target_word.length;
             }
 
-
-            // if (choice1 == ''){
-            //     document.getElementById("choice1").disabled=true
-            // }
-            // document.getElementById('label_c1').innerHTML = choice1;
-            //
-            // if (choice2.length == 0){
-            //     document.getElementById("choice2").disabled=true
-            // }
-            // document.getElementById('label_c2').innerHTML = choice2;
-            // if (choice3.length == 0){
-            //     document.getElementById("choice3").disabled=true
-            // }
-            // document.getElementById('label_c3').innerHTML = choice3;
-            // if (choice4.length == 0){
-            //     document.getElementById("choice4").disabled=true
-            // }
-            // document.getElementById('label_c4').innerHTML = choice4;
-            //
-            // if (choice5.length == 0){
-            //     document.getElementById("choice5").disabled=true
-            // }
-            // document.getElementById('label_c5').innerHTML = choice5;
-            //
-            // if (choice6.length == 0){
-            //     document.getElementById("choice6").disabled=true
-            // }
-            // document.getElementById('label_c6').innerHTML = choice6;
-
-            // if (use_checklist){
-            //   num_prompt.innerHTML = "";
-            // }
-            // else
-            // {
-            //
-            // }
-
           } else {
-            document.getElementById('context-wrapper').innerHTML = "";
-            document.getElementById('target-sentence').innerHTML = target_sentence + '________';
-            num_prompt.innerHTML = "";
+            document.getElementById('context').innerHTML = target_sentence+ '________';
+            // document.getElementById('context-wrapper').innerHTML = "";
+            // document.getElementById('target-sentence').innerHTML = target_sentence + '________';
+            document.getElementById("num_prompt").innerHTML = "字数：" + target_word.length;
           }
         }
 
