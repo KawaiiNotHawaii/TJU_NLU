@@ -51,11 +51,11 @@ function fetchARecord() {
           choices.push(data.choice5)
           choices.push(data.choice6)
 
-          for(var i=1; i<choices.length; i++) {
-            if (choices[i].length == 0) {
-              document.getElementById("choice" + i).disabled = false
-            }
-          }
+          // for(var i=1; i<choices.length; i++) {
+          //   if (choices[i].length == 0) {
+          //     document.getElementById("choice" + i).disabled = false
+          //   }
+          // }
           if (hasContext) {
             document.getElementById('context').innerHTML = context+ '________';
             //document.getElementById('target-sentence').innerHTML = target_sentence
@@ -63,11 +63,13 @@ function fetchARecord() {
             if(use_checklist)
             {
               document.getElementById("num_prompt").innerHTML= "";
-              document.getElementById("choice0").checked=true
+              document.getElementById("choice0").checked=true;
 
               for(var i=1; i<choices.length; i++){
                 if(choices[i].length == 0){
-                  document.getElementById("choice"+i).disabled=true
+                  document.getElementById("choice"+i).disabled=true;
+                } else {
+                  document.getElementById("choice"+i).disabled=false;
                 }
                 document.getElementById('label_c'+i).innerHTML = choices[i];
               }
