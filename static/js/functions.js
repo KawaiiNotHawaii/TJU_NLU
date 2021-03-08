@@ -148,7 +148,7 @@ function changeView() {
   } else {
     buffer4checklist = getSelected();
 
-    document.getElementById('form').innerHTML = "<input type=\"text\" name=\"answer\" id=\"answer\" required=\"required\" placeholder=\"请键入\">";
+    document.getElementById('form').innerHTML = "<input type=\"text\" name=\"answer\" id=\"answer\" required=\"required\" placeholder=\"请键入\" autofocus>";
     document.getElementById('answer').value = buffer4textInput;
     document.getElementById("num_prompt").innerHTML = "字数：" + target_word.length;
 

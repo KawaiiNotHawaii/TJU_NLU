@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from flask import Flask, render_template, jsonify, request, url_for, redirect, session, flash
 from databaseConn import MySqlHelper
 import os
