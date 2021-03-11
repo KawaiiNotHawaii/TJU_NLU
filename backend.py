@@ -4,9 +4,9 @@ import os
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(24)
-
 sqlh = MySqlHelper()
 sqlh.connect()
+
 
 @app.route('/')
 def route():
@@ -42,7 +42,7 @@ def validate():
                     session.permanent = True
 
                     message = '登陆成功'
-                    print(message)
+                    print("账号{}{}".format(user_id, message))
                     return redirect('/')
                 elif (code == 1):
                     message = '密码错误'
@@ -66,19 +66,14 @@ def validate():
 def fetch_randomly():
     # data = sqlh.query_randomly_demo("novels")
     # message = {'id':data[0], 'context':data[1], 'targetSentence':data[2], 'targetWord':data[3]}
-    res = sqlh.fetch_randomly()
+    res = sqlh.fetch_randomly(session['user_id'])
     if (res is None):
         message = {'isFinished':True}
         return jsonify(message)
     else:
         (data, hasContext) = res
 
-        message = {'isFinished':False, 'id':data[0], 'context':data[2] + data[3], 'targetSentence':data[3], 'targetWord':data[4], 'hasContext':hasContext}
-        choices = data[6].split(' ')
-        for i in range(6):
-            message['choice{}'.format(i+1)] = ''
-        for idx, choice in enumerate(choices):
-            message['choice{}'.format(idx+1)] = choice
+        message = {'isFinished':False, 'id':data[0], 'context':data[1] + data[2], 'targetWord':data[3], 'extra':data[4], 'hasContext':hasContext}
         print(message)
         return jsonify(message)  # serialize and use JSON headers
 
@@ -98,7 +93,7 @@ def post_to_db():
         print("novel_id:", novel_id, "; user_id:", user_id, "; hasContext:", hasContext, "; guess:", guess, "; t_word:",target_word, "; isRight:", isRight)
         sqlh.insert_into_guesses(novel_id, user_id, hasContext, guess, target_word,  isRight)
 
-        sqlh.update_times_col("output_novels",novel_id, "hitTimesInContext")
+        sqlh.update_times_col("output_novels{}".format(user_id), novel_id, "hitTimesInContext")
         '''
         if isRight:
             if hasContext:

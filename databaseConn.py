@@ -4,16 +4,18 @@ import hosts
 
 class MySqlHelper(object):
     def __init__(self):
-        host = hosts.Hosts()
-        self.host = host.host
-        self.port = host.port
-        self.user = host.user
-        self.password = host.password
-        self.db = host.db
+        self.hosts = hosts.Hosts()
+        self.host = self.hosts.host
+        self.port = self.hosts.port
+        self.user = self.hosts.user
+        self.password = self.hosts.password
+        self.db = self.hosts.db
+
         self.conn = None
         self.cursor = None
 
     def connect(self):
+
         self.conn = pymysql.connect(host=self.host, port=self.port,
                                user=self.user, password=self.password, db=self.db)
         self.cursor = self.conn.cursor()
@@ -40,7 +42,7 @@ class MySqlHelper(object):
 
     def insert_into_guesses(self, novel_id, user_id, hasContext, guess, target_word, isRight):
         try:
-            query = """INSERT INTO guesses VALUES ({}, {}, {}, "{}","{}", {})""".format(novel_id, user_id, int(hasContext), guess,target_word, int(isRight))
+            query = """INSERT INTO guesses{} VALUES ({}, {}, {}, "{}","{}", {})""".format(user_id, novel_id, user_id, int(hasContext), guess,target_word, int(isRight))
             print("insertion query is:", query)
             self.cursor.execute(query)
             self.conn.commit()
@@ -50,10 +52,10 @@ class MySqlHelper(object):
 
     # operations for TABLE output_novels
 
-    def fetch_randomly(self):
+    def fetch_randomly(self, table):
         # randomly fetch a record
         # fetch records to be evaluated with context first, if not exist, fetch records to be evaluated without context
-        data = self.select_with_context()
+        data = self.select_with_context(table)
         if (data is not None):
             return (data, True)
         else:
@@ -74,14 +76,14 @@ class MySqlHelper(object):
             print("Selection with context failed:", e)
             return "Selection with context failed"
 
-    def select_with_context(self):
+    def select_with_context(self, user_id):
         # randomly select a record to be evaluated with context
         try:
-            query = "SELECT * FROM output_novels WHERE hitTimesInContext<1"
+            query = "SELECT * FROM {} WHERE hitTimesInContext<1".format("output_novels{}".format(user_id))
             self.cursor.execute(query)
             data = self.cursor.fetchall()
             if data:
-                return self.query_by_id(data[0][0], "novels")
+                return self.query_by_id(data[0][0], "novels{}".format(user_id))
             else:
                 return None
         except Exception as e:
@@ -130,18 +132,19 @@ class MySqlHelper(object):
         except Exception as e:
             print("Deleting from output_novels failed:", e)
             return "Deleting from output_novels failed"
-
     def login_validation(self, user_id, pwd):
         query = "SELECT * FROM users WHERE id={}".format(user_id)
         self.cursor.execute(query)
         data = self.cursor.fetchall()
         if data:
-            if (data[0][1]==pwd):
+            if (data[0][1] == pwd):
                 return 0
             else:
                 return 1
         else:
             return 2
+
+
 
 
 
