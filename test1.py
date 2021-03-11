@@ -23,7 +23,7 @@ class Choies(object):
 data = []
 nums = 0
 results_dicts = []
-file_list = ['data/dev_not_context.json', 'data/test_not_context.json']
+file_list = ['data/dev.json', 'data/test.json']
 for file_name in file_list:
     tag = file_name.split('/')[-1].split('.')[0]
     with open(file_name, 'r', encoding='utf-8') as f:
@@ -34,7 +34,7 @@ for file_name in file_list:
     f.close()
 
 
-for path in ['shibiao/without_context_step1.json']:
+for path in ['shibiao/with_context_step1.json']:
     tag = path.split('/')[-1].split('.')[0]
     with open(path, encoding='utf-8') as f:
         for line in f:
@@ -81,37 +81,60 @@ for path in ['shibiao/without_context_step1.json']:
             #print(choice_list)
             #print(choice_index_list)
             #print(json_obj['novel_id'])
-            tup = (int(json_obj['novel_id']), context, json_query['t'].replace(" ", ""), json_query['words'].replace(" ", ""), json_query['tag'], choice_text, index_text)
+            tup = (int(json_obj['novel_id']), context, json_query['t'].replace(" ", ""), json_query['words'].replace(" ", ""), json_query['tag'])
             data.append(tup)
-random.shuffle(data)
-print(nums)
+#random.shuffle(data)
+print(len(data))
+print(data[0])
+datas = []
+max_users = 5
+nums_users = 5
+per_users = int(len(data) / 5) + 1
+for i in range(nums_users):
+    datas.append(data[i* per_users : (i+1) * per_users])
 
 
 
 print("{} records to be dump".format(len(data)))
 host = hosts.Hosts()
 
-conn = pymysql.connect(host=host.host, port=host.port,
-                            user=host.user, password=host.password, db=host.db)
-cursor = conn.cursor()
+for user_id in range(max_users):
+    conn = pymysql.connect(host=host.host, port=host.port,
+                                user=host.user, password=host.password, db=host.db)
+    cursor = conn.cursor()
 
-clear_guesses = "DELETE FROM guesses"
-cursor.execute(clear_guesses)
-print("guesses cleared;")
-clear_output_novels = "DELETE FROM output_novels"
-cursor.execute(clear_output_novels)
-print("output_novels cleared;")
-clear_novels = "DELETE FROM novels"
-cursor.execute(clear_novels)
-print("novels cleared;")
-reset_auto_increment = "ALTER TABLE novels AUTO_INCREMENT=0"
-cursor.execute(reset_auto_increment)
-print("AUTO_INCREMENT reset;")
+    clear_guesses = "DELETE FROM {}".format("guesses{}".format(user_id+1))
+    cursor.execute(clear_guesses)
+    print("guesses cleared;")
+    clear_output_novels = "DELETE FROM {}".format("output_novels{}".format(user_id+1))
+    cursor.execute(clear_output_novels)
+    print("output_novels cleared;")
+    clear_novels = "DELETE FROM {}".format("novels{}".format(user_id+1))
+    cursor.execute(clear_novels)
+    print("novels cleared;")
+    reset_auto_increment = "ALTER TABLE {} AUTO_INCREMENT=0".format("novels{}".format(user_id+1))
+    cursor.execute(reset_auto_increment)
+    print("AUTO_INCREMENT reset;")
+    '''
+    query = "INSERT INTO novels (novel_id, context, target_sentence, target_word, tag, choice, choice_index) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+    cursor.executemany(query, data)
+    '''
+    conn.commit()
+    conn.close()
 
-query = "INSERT INTO novels (novel_id, context, target_sentence, target_word, tag, choice, choice_index) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-cursor.executemany(query, data)
 
-conn.commit()
-conn.close()
+
+for idx, data in enumerate(datas[:max_users]):
+    conn = pymysql.connect(host=host.host, port=host.port,
+                                user=host.user, password=host.password, db=host.db)
+    cursor = conn.cursor()
+
+    query = "INSERT INTO {} (id, context, target_sentence, target_word, tag) VALUES (%s, %s, %s, %s, %s)".format("novels{}".format(idx+1))
+    cursor.executemany(query, data)
+    conn.commit()
+    conn.close()
+
+
+
+
 print("all settled and ready to go;")
-

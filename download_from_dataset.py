@@ -14,7 +14,7 @@ guesses = cursor.fetchall()
 query = "SELECT * FROM novels"
 cursor.execute(query)
 novels = cursor.fetchall()
-f = open('shibiao/without_context_step1.json', 'w', encoding='utf-8')
+f = open('shibiao/with_context_step2.json', 'w', encoding='utf-8')
 for guess_raw, novel_raw in zip(guesses, novels):
     _,_,_,guess,t_words, is_right = guess_raw
     _,novel_id, context, target_sentence,_,_,_,_ = novel_raw

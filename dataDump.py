@@ -23,7 +23,7 @@ class Choies(object):
 data = []
 nums = 0
 
-for path in ['shibiao/without_context_step1.json']:
+for path in ['shibiao/with_context_step1.json']:
     tag = path.split('/')[-1].split('.')[0]
     with open(path, encoding='utf-8') as f:
         for line in f:
@@ -75,26 +75,26 @@ print(nums)
 
 print("{} records to be dump".format(len(data)))
 host = hosts.Hosts()
+for user_id, db in host.dbs:
+    conn = pymysql.connect(host=host.host, port=host.port,
+                                user=host.user, password=host.password, db=db)
+    cursor = conn.cursor()
 
-conn = pymysql.connect(host=host.host, port=host.port,
-                            user=host.user, password=host.password, db=host.db)
-cursor = conn.cursor()
+    clear_guesses = "DELETE FROM guesses"
+    cursor.execute(clear_guesses)
+    print("guesses cleared;")
+    clear_output_novels = "DELETE FROM output_novels"
+    cursor.execute(clear_output_novels)
+    print("output_novels cleared;")
+    clear_novels = "DELETE FROM novels"
+    cursor.execute(clear_novels)
+    print("novels cleared;")
+    reset_auto_increment = "ALTER TABLE novels AUTO_INCREMENT=0"
+    cursor.execute(reset_auto_increment)
+    print("AUTO_INCREMENT reset;")
 
-clear_guesses = "DELETE FROM guesses"
-cursor.execute(clear_guesses)
-print("guesses cleared;")
-clear_output_novels = "DELETE FROM output_novels"
-cursor.execute(clear_output_novels)
-print("output_novels cleared;")
-clear_novels = "DELETE FROM novels"
-cursor.execute(clear_novels)
-print("novels cleared;")
-reset_auto_increment = "ALTER TABLE novels AUTO_INCREMENT=0"
-cursor.execute(reset_auto_increment)
-print("AUTO_INCREMENT reset;")
-
-query = "INSERT INTO novels (novel_id, context, target_sentence, target_word, tag, choice, choice_index) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-cursor.executemany(query, data)
+#query = "INSERT INTO novels (novel_id, context, target_sentence, target_word, tag, choice, choice_index) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+#cursor.executemany(query, data)
 
 conn.commit()
 conn.close()
