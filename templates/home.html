@@ -23,8 +23,8 @@
 
           <div class="form-wrapper">
             <h2>你的猜测:</h2>
-            <form name="form" id='form'>
-              <input type="text" name="answer" id="answer" required="required" placeholder="请键入">
+            <form name="form" id='form' onsubmit="on_submit(event); return false;">
+              <input type="text" name="answer" id="answer" placeholder="请键入">
               <p id="num_prompt">字数：</p>
             </form>
             <!-- buttons put inside the form may not be able to call the js function properly -->

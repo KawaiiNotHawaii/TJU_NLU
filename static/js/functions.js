@@ -63,6 +63,11 @@ function fetchARecord() {
 
 };
 
+function on_submit(event) {
+  event.preventDefault();
+  submit();
+}
+
 
 function submit() {
 
@@ -97,5 +102,6 @@ function submit() {
     fetchARecord();
   });
 
-}
+  // return false;
 
+}
