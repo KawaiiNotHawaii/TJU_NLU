@@ -42,6 +42,18 @@ def validate():
                     session['user_id'] = user_id
                     session.permanent = True
 
+                    # TODO: double check
+                    timer = 1000
+                    while ((session.get('user_id') is None) and (timer != 0)):
+                        session['user_id'] = user_id
+                        session.permanent = True
+                        timer -= 1
+                    if(timer==0):
+                        message = 'Session添加失败：Timeout. 请重新登陆。'
+                        print(message)
+                        flash(message)
+                        return return redirect('/login')
+
                     message = '登陆成功'
                     print("账号{}{}".format(user_id, message))
                     return redirect('/')
@@ -67,7 +79,24 @@ def validate():
 def fetch_randomly():
     # data = sqlh.query_randomly_demo("novels")
     # message = {'id':data[0], 'context':data[1], 'targetSentence':data[2], 'targetWord':data[3]}
-    res = sqlh.fetch_randomly(session['user_id'])
+
+    # TODO: to be deleted
+    # todo: add try catch to redirect if session.get fail!!!
+    # print('Trying to get user_id in session in fetch_randomly():', session.get('user_id', "fail"))
+    # if(session.get('user_id') is not None):
+    res=-1
+
+    # exception handler
+    timer = 1000
+    while ((session.get('user_id') is None) and (timer != 0)):
+        res = sqlh.fetch_randomly(session.get('user_id'))
+        timer -= 1
+    if(timer==0):
+        message = 'user_id获取失败：Timeout. 请重新登陆。'
+        print(message)
+        flash(message)
+        return return redirect('/login')
+
     if (res is None):
         message = {'isFinished':True}
         return jsonify(message)
@@ -84,6 +113,10 @@ def post_to_db():
     if (request.is_json):
         request_data = request.get_json()
         novel_id  = int(request_data["novel_id"])
+
+        # TODO: to be deleted
+        print('Trying to get user_id in session in post_to_db():', session.get('user_id', "fail"))
+
         user_id = session.get('user_id')
         print('Guess recieved, annotater ID:', user_id)
         hasContext = bool(int(request_data["hasContext"]))
