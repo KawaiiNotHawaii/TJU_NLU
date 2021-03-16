@@ -30,7 +30,10 @@ function fetchARecord() {
       .then((response) => {
         return response.json();
       }).then((data) => {
-        if(data.isFinished){
+        if('state' in data){
+          alert(data.message);
+          redirect();
+        } else if ('isFinished' in data) {
           document.getElementById('main').innerHTML = "所有数据均已标记完成！"
         } else {
           novel_id = data.id;
@@ -99,9 +102,18 @@ function submit() {
       }).then((data) => {
     // TODO: DELETE; only for debug
     // alert(data.message);
-    fetchARecord();
+    if(data.state==-1){
+      alert(data.message);
+      redirect();
+    }else{
+      fetchARecord();
+    }
   });
 
   // return false;
 
+}
+
+function redirect(){
+  document.location.href="login";
 }

@@ -11,7 +11,7 @@ sqlh.connect()
 
 @app.route('/')
 def route():
-    if session.get('user_id'):
+    if session.get('user_id') is not None:
         print('Already logged in as:', session.get('user_id'))
         return render_template('home.html')
     else:
@@ -19,6 +19,7 @@ def route():
 
 @app.route('/login', methods=['GET'])
 def login():
+    print("success")
     return render_template('login.html')
 
 @app.route('/validate', methods=['GET', 'POST'])
@@ -36,7 +37,11 @@ def validate():
         if all([user_id, pwd]):
             try:
                 user_id = int(user_id)
-
+            except:
+                message = '用户名必须为数字'
+                print(message)
+                flash(message)
+            else:
                 code = sqlh.login_validation(user_id, pwd)
                 if (code == 0):
                     session['user_id'] = user_id
@@ -52,7 +57,7 @@ def validate():
                         message = 'Session添加失败：Timeout. 请重新登陆。'
                         print(message)
                         flash(message)
-                        return return redirect('/login')
+                        return redirect('/login')
 
                     message = '登陆成功'
                     print("账号{}{}".format(user_id, message))
@@ -65,10 +70,7 @@ def validate():
                     message = '用户名不存在'
                     print(message)
                     flash(message)
-            except:
-                message = '用户名必须为数字'
-                print(message)
-                flash(message)
+
         else:
             message = '用户名或密码不能为空'
             print(message)
@@ -88,14 +90,16 @@ def fetch_randomly():
 
     # exception handler
     timer = 1000
-    while ((session.get('user_id') is None) and (timer != 0)):
-        res = sqlh.fetch_randomly(session.get('user_id'))
+    while (timer != 0):
+        if (session.get('user_id') is not None):
+            res = sqlh.fetch_randomly(session.get('user_id'))
+            break
         timer -= 1
     if(timer==0):
-        message = 'user_id获取失败：Timeout. 请重新登陆。'
-        print(message)
+        message = '用户ID获取失败：Timeout. 请重新登陆。'
+        print("In fetch_randomly()", message, session.get('user_id'))
         flash(message)
-        return return redirect('/login')
+        return jsonify({'state':-1, 'message':message})
 
     if (res is None):
         message = {'isFinished':True}
@@ -103,7 +107,7 @@ def fetch_randomly():
     else:
         (data, hasContext) = res
 
-        message = {'isFinished':False, 'id':data[0], 'context':data[1] + data[2], 'targetWord':data[3], 'extra':data[4], 'hasContext':hasContext}
+        message = {'id':data[0], 'context':data[1] + data[2], 'targetWord':data[3], 'extra':data[4], 'hasContext':hasContext}
         print(message)
         return jsonify(message)  # serialize and use JSON headers
 
@@ -113,11 +117,21 @@ def post_to_db():
     if (request.is_json):
         request_data = request.get_json()
         novel_id  = int(request_data["novel_id"])
+        user_id = -1
 
-        # TODO: to be deleted
-        print('Trying to get user_id in session in post_to_db():', session.get('user_id', "fail"))
+        # exception handler
+        timer = 1000
+        while (timer != 0):
+            if (session.get('user_id') is not None):
+                user_id = session.get('user_id')
+                break
+            timer -= 1
+        if(timer==0):
+            message = '用户ID获取失败：Timeout. 请重新登陆。'
+            print("In post_to_db()", message, session.get('user_id'))
+            flash(message)
+            return jsonify({'state':-1, 'message':message})
 
-        user_id = session.get('user_id')
         print('Guess recieved, annotater ID:', user_id)
         hasContext = bool(int(request_data["hasContext"]))
         guess = request_data["guess"]
@@ -128,26 +142,26 @@ def post_to_db():
         sqlh.insert_into_guesses(novel_id, user_id, hasContext, guess, target_word,  isRight)
 
         sqlh.update_times_col("output_novels{}".format(user_id), novel_id, "hitTimesInContext")
-        '''
-        if isRight:
-            if hasContext:
-                print("Guess WITH context is RIGHT, update (hitTimesInContext)")
-                sqlh.update_times_col(novel_id, "hitTimesInContext")
-            else:
-                print("Guess WITHOUT context is RIGHT, delete from table output_novels")
-                sqlh.delete_from_outputNovels(novel_id)
-        else:
-            if hasContext:
-                print("Guess WITH context is WRONG, delete from table output_novels")
-                sqlh.delete_from_outputNovels(novel_id)
-            else:
-                print("Guess WITHOUT context is WRONG, update (missTimesWithoutContext)")
-                sqlh.update_times_col(novel_id, "missTimesWithoutContext")
-        '''
+        # '''
+        # if isRight:
+        #     if hasContext:
+        #         print("Guess WITH context is RIGHT, update (hitTimesInContext)")
+        #         sqlh.update_times_col(novel_id, "hitTimesInContext")
+        #     else:
+        #         print("Guess WITHOUT context is RIGHT, delete from table output_novels")
+        #         sqlh.delete_from_outputNovels(novel_id)
+        # else:
+        #     if hasContext:
+        #         print("Guess WITH context is WRONG, delete from table output_novels")
+        #         sqlh.delete_from_outputNovels(novel_id)
+        #     else:
+        #         print("Guess WITHOUT context is WRONG, update (missTimesWithoutContext)")
+        #         sqlh.update_times_col(novel_id, "missTimesWithoutContext")
+        # '''
 
         # TODO: database operations here
 
-    return jsonify({'message':'Got it.'})
+    return jsonify({'state':1})
 
 if __name__ == "__main__":
     app.run(debug=True, threaded=False)
